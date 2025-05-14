@@ -1,6 +1,5 @@
 package com.foodquart.microservicemessaging.infrastructure.configuration;
 
-import com.foodquart.microservicemessaging.domain.util.SecurityMessages;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +12,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.foodquart.microservicemessaging.domain.util.SecurityMessages.ACCESS_DENIED;
+import static com.foodquart.microservicemessaging.domain.util.SecurityMessages.MISSING_AUTH_HEADER;
 
 @Configuration
 @EnableWebSecurity
@@ -55,7 +57,7 @@ public class SecurityConfig {
                     "code": "UNAUTHORIZED",
                     "message": "%s"
                 }
-            """, SecurityMessages.MISSING_AUTH_HEADER));
+            """, MISSING_AUTH_HEADER));
         };
     }
 
@@ -69,7 +71,7 @@ public class SecurityConfig {
                     "code": "FORBIDDEN",
                     "message": "%s"
                 }
-            """, SecurityMessages.ACCESS_DENIED));
+            """, ACCESS_DENIED));
         };
     }
 }

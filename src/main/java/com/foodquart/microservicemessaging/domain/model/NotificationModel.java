@@ -12,6 +12,4 @@ import lombok.Setter;
 public class NotificationModel {
     private String phoneNumber;
     private String message;
-    private String securityPin;
-    private Long orderId;
 }

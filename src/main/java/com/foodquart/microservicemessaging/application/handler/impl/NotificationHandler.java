@@ -6,9 +6,10 @@ import com.foodquart.microservicemessaging.application.handler.INotificationHand
 import com.foodquart.microservicemessaging.application.mapper.INotificationRequestMapper;
 import com.foodquart.microservicemessaging.application.mapper.INotificationResponseMapper;
 import com.foodquart.microservicemessaging.domain.api.INotificationServicePort;
-import com.foodquart.microservicemessaging.domain.util.NotificationMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.foodquart.microservicemessaging.domain.util.NotificationMessages.SMS_SENT_SUCCESS;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,6 @@ public class NotificationHandler implements INotificationHandler {
     @Override
     public NotificationResponseDto sendSmsNotification(NotificationRequestDto notificationRequestDto) {
         boolean success = notificationServicePort.sendNotification(notificationMapper.toModel(notificationRequestDto));
-        return notificationResponseMapper.toResponse(success, NotificationMessages.SMS_SENT_SUCCESS);
+        return notificationResponseMapper.toResponse(success, SMS_SENT_SUCCESS);
     }
 }
