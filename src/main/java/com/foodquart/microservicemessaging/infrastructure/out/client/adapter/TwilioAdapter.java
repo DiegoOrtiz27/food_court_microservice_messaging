@@ -11,6 +11,8 @@ import com.twilio.type.PhoneNumber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.foodquart.microservicemessaging.domain.util.TwilioMessages.*;
+
 @Slf4j
 @RequiredArgsConstructor
 public class TwilioAdapter implements IMessagingProviderPort {
@@ -19,37 +21,33 @@ public class TwilioAdapter implements IMessagingProviderPort {
 
     @Override
     public boolean sendSmsNotification(NotificationModel notificationModel) {
+        String logMessage;
         try {
-            String formattedMessage = String.format(
-                    "Your order #%d is ready. Security PIN: %s",
-                    notificationModel.getOrderId(),
-                    notificationModel.getSecurityPin()
-            );
-
             Message message = Message.creator(
                     new PhoneNumber(notificationModel.getPhoneNumber()),
                     new PhoneNumber(twilioConfig.getPhoneNumber()),
-                    formattedMessage
+                    notificationModel.getMessage()
             ).create();
-
-            log.info("SMS successfully sent to {} - SID: {}",
-                    notificationModel.getPhoneNumber(),
-                    message.getSid());
+            logMessage = String.format(SMS_SENT_SUCCESS, notificationModel.getPhoneNumber(), message.getSid());
+            log.info(logMessage);
 
             return true;
 
         } catch (ApiException e) {
-            log.error("Twilio API error when sending SMS: {} - Code: {}",
-                    e.getMessage(), e.getCode());
+            logMessage = String.format(API_ERROR, e.getMessage(), e.getCode());
+            log.error(logMessage);
             return false;
         } catch (AuthenticationException e) {
-            log.error("Authentication error with Twilio: {}", e.getMessage());
+            logMessage = String.format(AUTHENTICATION_ERROR, e.getMessage());
+            log.error(logMessage);
             return false;
         } catch (TwilioException e) {
-            log.error("Twilio General Error: {}", e.getMessage());
+            logMessage = String.format(GENERAL_ERROR, e.getMessage());
+            log.error(logMessage);
             return false;
         } catch (Exception e) {
-            log.error("Unexpected error while sending SMS: {}", e.getMessage());
+            logMessage = String.format(UNEXPECTED_ERROR, e.getMessage());
+            log.error(logMessage);
             return false;
         }
     }

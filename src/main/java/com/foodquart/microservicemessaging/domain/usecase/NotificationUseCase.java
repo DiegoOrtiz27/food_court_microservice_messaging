@@ -4,9 +4,12 @@ import com.foodquart.microservicemessaging.domain.api.INotificationServicePort;
 import com.foodquart.microservicemessaging.domain.exception.DomainException;
 import com.foodquart.microservicemessaging.domain.model.NotificationModel;
 import com.foodquart.microservicemessaging.domain.spi.IMessagingProviderPort;
-import com.foodquart.microservicemessaging.domain.util.NotificationMessages;
+
+import static com.foodquart.microservicemessaging.domain.util.NotificationMessages.*;
 
 public class NotificationUseCase implements INotificationServicePort {
+
+    public static final String PHONE_REGEX = "^\\+[1-9]\\d{1,14}$";
 
     private final IMessagingProviderPort messagingProviderPort;
 
@@ -17,15 +20,24 @@ public class NotificationUseCase implements INotificationServicePort {
     @Override
     public boolean sendNotification(NotificationModel notificationModel) {
         if (!isValidPhoneNumber(notificationModel.getPhoneNumber())) {
-            throw new DomainException(NotificationMessages.BAD_NUMBER);
+            throw new DomainException(BAD_NUMBER);
         }
+
+        if (notificationModel.getPhoneNumber().isEmpty()) {
+            throw new DomainException(NUMBER_REQUIRED);
+        }
+
+        if (notificationModel.getMessage().isEmpty()) {
+            throw new DomainException(MESSAGE_REQUIRED);
+        }
+
         if (!messagingProviderPort.sendSmsNotification(notificationModel)) {
-            throw new DomainException(NotificationMessages.SMS_SENT_ERROR);
+            throw new DomainException(SMS_SENT_ERROR);
         }
         return true;
     }
 
     public boolean isValidPhoneNumber(String phoneNumber) {
-        return phoneNumber != null && phoneNumber.matches("^\\+[1-9]\\d{1,14}$");
+        return phoneNumber != null && phoneNumber.matches(PHONE_REGEX);
     }
 }
