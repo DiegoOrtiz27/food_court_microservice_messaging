@@ -8,7 +8,7 @@ public final class TwilioMessages {
     public static final String GENERAL_ERROR = "Twilio General Error: %s";
     public static final String UNEXPECTED_ERROR = "Unexpected error while sending SMS: %s";
 
-    private TwilioMessages() {
+    TwilioMessages() {
         throw new IllegalStateException("Utility class");
     }
 }

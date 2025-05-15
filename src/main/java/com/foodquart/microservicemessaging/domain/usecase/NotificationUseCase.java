@@ -19,15 +19,16 @@ public class NotificationUseCase implements INotificationServicePort {
 
     @Override
     public boolean sendNotification(NotificationModel notificationModel) {
+
+        if (notificationModel.getPhoneNumber() == null || notificationModel.getPhoneNumber().isEmpty()) {
+            throw new DomainException(NUMBER_REQUIRED);
+        }
+
         if (!isValidPhoneNumber(notificationModel.getPhoneNumber())) {
             throw new DomainException(BAD_NUMBER);
         }
 
-        if (notificationModel.getPhoneNumber().isEmpty()) {
-            throw new DomainException(NUMBER_REQUIRED);
-        }
-
-        if (notificationModel.getMessage().isEmpty()) {
+        if (notificationModel.getMessage() == null || notificationModel.getMessage().isEmpty()) {
             throw new DomainException(MESSAGE_REQUIRED);
         }
 
