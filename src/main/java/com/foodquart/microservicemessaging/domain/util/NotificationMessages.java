@@ -7,7 +7,7 @@ public class NotificationMessages {
     public static final String NUMBER_REQUIRED = "The number is required";
     public static final String MESSAGE_REQUIRED = "The message is required";
 
-    private NotificationMessages() {
+    NotificationMessages() {
         throw new IllegalStateException("Utility class");
     }
 }
